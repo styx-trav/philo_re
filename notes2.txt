@@ -1,0 +1,11 @@
+looks good, still needs a bit of norming + solo philo func
+
+getting issues of "lock acquisition order" still ? unsure what those are or how what order is being referred to, will check that out later.
+
+i cannot write proper conditions apparently lol
+anyway fixed
+
+also (obviously), needs more rigorous testing
+
+looking good so far, will check back in later to ensure proper functionality
+next up : parsing (boooo)
