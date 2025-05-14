@@ -36,10 +36,13 @@ void	free_table(t_fork *head)
 	}
 }
 
+//if wanting to see left/right fork :
+//else if (action == 5)
+//printf("has grabbed right fork : %c\n", philo->right->num);
 static void	printer(useconds_t time, t_philo *philo, int action)
 {
 	pthread_mutex_lock(&(philo->rules->print));
-	printf("%u %d ", /*((*/time/*) / 100) * 100*/, philo->name);
+	printf("%u %d ", time, philo->name);
 	if (!action)
 		printf("has died\n");
 	else if (action == 1)
@@ -48,10 +51,8 @@ static void	printer(useconds_t time, t_philo *philo, int action)
 		printf("is thinking\n");
 	else if (action == 2)
 		printf("is sleeping\n");
-	else if (action == 4)
-		printf("has grabbed left fork : %c\n", philo->left->num);
-	else if (action == 5)
-		printf("has grabbed right fork : %c\n", philo->right->num);
+	else if (action == 4 || action == 5)
+		printf("has taken a fork\n");
 	pthread_mutex_unlock(&(philo->rules->print));
 }
 

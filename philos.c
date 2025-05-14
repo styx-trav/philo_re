@@ -56,23 +56,26 @@ void	*philo_does(void *data)
 	useconds_t time;
 
 	philo = (t_philo *)data;
-	//pthread_mutex_lock(&(philo->rules->lock));
-	pthread_mutex_lock(&(philo->rules->eat));
-	philo->last_meal = philo->rules->before;
-	//pthread_mutex_unlock(&(philo->rules->lock));
-	pthread_mutex_unlock(&(philo->rules->eat));
+	pthread_mutex_lock(&(philo->rules->start));
+	pthread_mutex_unlock(&(philo->rules->start));
 	while (!check_dead(philo))
 	{
 		grab_forks(philo);
 		time = getnow(0);
 		printing_press(philo, 1);
 		while (getnow(0) < time + philo->tte)
-			usleep(10);
+		{
+			if (check_dead(philo))
+				break ;
+		}
 		time = getnow(0);
 		printing_press(philo, 2);
 		forks_down(philo);
 		while (getnow(0) < time + philo->tts)
-			usleep(10);
+		{
+			if (check_dead(philo))
+				return (NULL);
+		}
 		printing_press(philo, 3);
 		usleep(10);
 	}

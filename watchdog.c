@@ -14,7 +14,9 @@ static void	death(t_philo *philo, int dies)
 static int	is_dead(t_philo *philo, int *count, int num)
 {
 	pthread_mutex_lock(&(philo->rules->eat));
-	if (philo->last_meal && getnow(0) >= philo->last_meal + philo->rules->ttd)
+	if (!philo->last_meal)
+		philo->last_meal = philo->rules->before;
+	else if (getnow(0) >= philo->last_meal + philo->rules->ttd)
 	{
 		pthread_mutex_unlock(&(philo->rules->eat));
 		death(philo, 1);
@@ -38,8 +40,8 @@ void	*watchdog(void *philos)
 
 	count = 0;
 	philo = (t_philo *)philos;
-	pthread_mutex_lock(&(philo->rules->eat));
-	pthread_mutex_unlock(&(philo->rules->eat));
+	pthread_mutex_lock(&(philo->rules->start));
+	pthread_mutex_unlock(&(philo->rules->start));
 	while (1)
 	{
 		philo = (t_philo *)philos;

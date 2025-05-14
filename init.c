@@ -60,7 +60,6 @@ void	set_table(t_fork *head, int ttd, int tte, int tts)
 	i = 1;
 	while (tmp)
 	{
-		tmp->num = i - 1 + 'a';
 		philo = tmp->right;
 		philo->name = i;
 		philo->ttd = ttd;

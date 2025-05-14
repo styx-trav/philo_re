@@ -12,6 +12,7 @@ typedef struct	s_info
 	int dead;
 	useconds_t before;
 	pthread_mutex_t lock;
+	pthread_mutex_t start;
 	pthread_mutex_t print;
 	pthread_mutex_t eat;
 	useconds_t ttd;
@@ -37,7 +38,6 @@ typedef struct	s_fork
 {
 	t_philo *left;
 	t_philo *right;
-	char num;
 	pthread_mutex_t lock;
 }		t_fork;
 

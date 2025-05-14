@@ -14,20 +14,29 @@ static void	detach(t_philo *head, t_philo *end, int unlock)
 	}
 }
 
-static int	mutex_watch(t_philo *philo, pthread_t *watch)
+static int	mutexes(t_philo *philo)
 {
 	if (pthread_mutex_init(&(philo->rules->lock), NULL) != 0
 		|| pthread_mutex_init(&(philo->rules->print), NULL) != 0
-		|| pthread_mutex_init(&(philo->rules->eat), NULL) != 0)
+		|| pthread_mutex_init(&(philo->rules->eat), NULL) != 0
+		|| pthread_mutex_init(&(philo->rules->start), NULL) != 0)
 	{
 		perror("mutex inits");
 		return (-1);
 	}
+	pthread_mutex_lock(&(philo->rules->start));
+	return (0);
+}
+
+static int	start_watch(pthread_t *watch, t_philo *philo)
+{
 	if (philo->right != philo->left && pthread_create(watch, NULL, &watchdog, philo))
 	{
 		perror("starting watchdog");
 		return (-1);
 	}
+	philo->rules->before = getnow(0);
+	pthread_mutex_unlock(&(philo->rules->start));
 	return (0);
 }
 
@@ -37,9 +46,8 @@ int	start_threads(t_fork *head, pthread_t *watch)
 
 	philo = head->right;
 	philo->rules->before = 0;
-	if (mutex_watch(philo, watch) == -1)
+	if (mutexes(philo) == -1)
 		return (-1);
-	pthread_mutex_lock(&(philo->rules->eat));
 	while (philo)
 	{
 		if (pthread_create(&(philo->num), NULL, &philo_does, philo))
@@ -53,9 +61,7 @@ int	start_threads(t_fork *head, pthread_t *watch)
 		else
 			philo = philo->right->right;
 	}
-	head->right->rules->before = getnow(0);
-	pthread_mutex_unlock(&(head->right->rules->eat));
-	return (0);
+	return (start_watch(watch, head->right));
 }
 
 int	end_threads(t_fork *head, pthread_t *watch)
